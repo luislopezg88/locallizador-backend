@@ -4,7 +4,7 @@ const Licitacion = require("../schema/licitaciones");
 
 router.get("/", async (req, res) => {
   try {
-    const items = await Licitacion.find({ id_user: req.user.id, id_empresa: req.body.id_empresa });
+    const items = await Licitacion.find({ id_user: req.user.id });
     return res.json(items);
   } catch (error) {
     //console.log(error);
@@ -35,12 +35,12 @@ router.post("/", async (req, res) => {
       //return next(new Error("Licitación ya existe"));
     } else {
       const licitacion = new Licitacion({
-        id_user: req.user.id,
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
         inicio: req.body.inicio,
         fin: req.body.fin,
-        presupuesto: req.body.presupuesto
+        presupuesto: req.body.presupuesto,
+        id_user: req.user.id
       });
   
       const LicitacionInfo = await licitacion.save();

@@ -9,11 +9,7 @@ const UserSchema = new Mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String },
   name: { type: String },
-  password: { type: String, required: true },
-  edad: { type: String },
-  sexo: { type: String },
-  puestoTrabajo: { type: String },
-  tipo: { type: String },
+  password: { type: String, required: true }
 });
 
 UserSchema.pre("save", function (next) {

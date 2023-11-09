@@ -10,10 +10,6 @@ const LicitacionSchema = new Mongoose.Schema({
   id_user: { 
     type: Mongoose.Schema.Types.ObjectId,
     ref: 'User' 
-  },
-  id_empresa: { 
-    type: Mongoose.Schema.Types.ObjectId,
-    ref: 'Empresa' 
   }
 });
 
