@@ -8,6 +8,7 @@ const EmpresaSchema = new Mongoose.Schema({
   sector: { type: String },
   empleados: { type: Number },
   intereses: { type: String },
+  tags: { type: String },
   id_user: { 
     type: Mongoose.Schema.Types.ObjectId,
     ref: 'User' 

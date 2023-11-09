@@ -43,7 +43,8 @@ router.post("/", async (req, res) => {
         finalidad: req.body.finalidad,
         sector: req.body.sector,
         empleados: req.body.empleados,
-        intereses: req.body.intereses
+        intereses: req.body.intereses,
+        tags: req.body.tags
       });
   
       const empresaInfo = await empresa.save();
@@ -82,11 +83,11 @@ router.get("/:id", async function (req, res) {
 
 router.post("/save/:id", async function (req, res, next) {
   const id = req.params.id;
-  const { nombre, descripcion, finalidad, sector, empleados, intereses } = req.body;
+  const { nombre, descripcion, finalidad, sector, empleados, intereses, tags } = req.body;
   try {
     const empresa = await Empresa.findOne({ id })
     if (!empresa) {
-      const nuevaEmpresa = new Empresa({ nombre, descripcion, finalidad, sector, empleados, intereses, user });
+      const nuevaEmpresa = new Empresa({ nombre, descripcion, finalidad, sector, empleados, intereses, tags, user });
       await nuevaEmpresa.save();
       res.json(
         jsonResponse(200, {
@@ -100,6 +101,7 @@ router.post("/save/:id", async function (req, res, next) {
       empresa.sector = sector;
       empresa.empleados = empleados;
       empresa.intereses = intereses;
+      empresa.tags = tags;
       await empresa.save();
       res.json(
         jsonResponse(200, {
