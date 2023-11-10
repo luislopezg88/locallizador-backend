@@ -5,9 +5,9 @@ const EmpresaSchema = new Mongoose.Schema({
   nombre: { type: String },
   descripcion: { type: String },
   finalidad: { type: String },
-  sector: { type: String },
+  tipo: { type: String },
   empleados: { type: Number },
-  intereses: { type: String },
+  instrumento: { type: Array },
   tags: { type: String },
   id_user: { 
     type: Mongoose.Schema.Types.ObjectId,
