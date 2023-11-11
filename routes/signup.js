@@ -29,7 +29,7 @@ router.post("/", async function (req, res, next) {
       );
       //return next(new Error("user email exists"));
     } else {
-      const user = new User({ email, username, name, password, edad, sexo, puestoTrabajo, tipo });
+      const user = new User({ email, username, name, password });
       user.save();
       //console.log('caso3 todo bien')
       res.json(
