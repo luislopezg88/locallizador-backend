@@ -119,4 +119,47 @@ router.post("/save/:id", async function (req, res, next) {
   }
 });
 
+// Agregar ruta para consultar licitaciones
+router.get("/consultarLicitaciones/:id_empresa", async (req, res) => {
+  try {
+    const idEmpresa = req.params.id_empresa;
+
+    // Obtener datos de la empresa desde la BD
+    const empresa = await Empresa.findOne({ _id: idEmpresa });
+
+    if (!empresa) {
+      return res.status(404).json({ error: "Empresa no encontrada" });
+    }
+
+    // Extraer datos de sector y finalidad
+    const { sector, finalidad } = empresa;
+
+    // Conectar a la API y obtener resultados (sustituye 'urlDeLaApi' por la URL real)
+    const apiResults = await conectarAPI(sector, finalidad);
+
+    // Guardar resultados en la colección empresasLicitaciones
+    const nuevasLicitaciones = new EmpresasLicitaciones({
+      id_empresa: idEmpresa,
+      resultados: apiResults,
+    });
+
+    await nuevasLicitaciones.save();
+
+    return res.json({ success: true, resultados: apiResults });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error al consultar licitaciones" });
+  }
+});
+
+// Función para conectar a la API y obtener resultados
+async function conectarAPI(sector, finalidad) {
+  const apiUrl = '';
+  // Lógica para conectar a la API y obtener resultados
+  // Puedes utilizar librerías como axios o fetch para hacer la solicitud HTTP
+  // Retorna los resultados obtenidos desde la API
+  // Ejemplo: const response = await axios.get(apiUrl);
+  // return response.data;
+}
+
 module.exports = router;
