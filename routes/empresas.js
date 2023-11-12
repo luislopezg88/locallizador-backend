@@ -5,8 +5,9 @@ const router = express.Router();
 const Empresa = require("../schema/empresas");
 
 router.get("/", async (req, res) => {
+  console.log(req.query)
   try {
-    const items = await Empresa.find({ id_user: req.user.id });
+    const items = await Empresa.find({ id_user: req.query.user });
     return res.json(items);
   } catch (error) {
     //console.log(error);
@@ -26,7 +27,7 @@ router.post("/", async (req, res) => {
 
   try {
     const empresa = new Empresa();
-    const empresaExists = await empresa.nameExists(req.body.titulo);
+    const empresaExists = await empresa.empresaExists(req.body.titulo);
 
     if (empresaExists) {
       return res.status(409).json(
@@ -37,7 +38,7 @@ router.post("/", async (req, res) => {
       //return next(new Error("Licitación ya existe"));
     } else {
       const empresa = new Empresa({
-        id_user: req.user.id,
+        id_user: req.body.id_user,
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
         finalidad: req.body.finalidad,
@@ -57,7 +58,7 @@ router.post("/", async (req, res) => {
       );
     }
   } catch (error) {
-    //console.log(error);
+    console.log(error);
     res.status(500).json({ error: "Error al crear la empresa" });
   }
 });
@@ -85,7 +86,7 @@ router.post("/save/:id", async function (req, res, next) {
   const id = req.params.id;
   const { nombre, descripcion, finalidad, tipo, empleados, instrumento, tags } = req.body;
   try {
-    const empresa = await Empresa.findOne({ id })
+    const empresa = await Empresa.findOne({ _id: id })
     if (!empresa) {
       const nuevaEmpresa = new Empresa({ nombre, descripcion, finalidad, tipo, empleados, instrumento, tags, user });
       await nuevaEmpresa.save();
