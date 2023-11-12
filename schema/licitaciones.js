@@ -13,4 +13,9 @@ const LicitacionSchema = new Mongoose.Schema({
   }
 });
 
+LicitacionSchema.methods.nameExists = async function (titulo) {
+  const result = await Mongoose.model("Licitaciones").find({ titulo: titulo });
+  return result.length > 0;
+};
+
 module.exports = Mongoose.model("Licitaciones", LicitacionSchema);

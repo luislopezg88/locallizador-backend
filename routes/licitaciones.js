@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Licitacion = require("../schema/licitaciones");
+const { jsonResponse } = require("../lib/jsonResponse");
 
 router.get("/", async (req, res) => {
   try {
-    const items = await Licitacion.find({ id_user: req.user.id });
+    const items = await Licitacion.find({ id_user: req.params.user });
     return res.json(items);
   } catch (error) {
     //console.log(error);
@@ -13,18 +14,18 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (!req.body.titulo) {
+  if (!req.body.nombre) {
     //return res.status(400).json({ error: "Título es obligatorio" });
     return res.status(409).json(
       jsonResponse(409, {
-        error: "Título es obligatorio",
+        error: "EL nombre es obligatorio",
       })
     );
   }
 
   try {
     const licitacion = new Licitacion();
-    const licitacionExists = await licitacion.nameExists(req.body.titulo);
+    const licitacionExists = await licitacion.nameExists(req.body.nombre);
 
     if (licitacionExists) {
       return res.status(409).json(
@@ -40,7 +41,7 @@ router.post("/", async (req, res) => {
         inicio: req.body.inicio,
         fin: req.body.fin,
         presupuesto: req.body.presupuesto,
-        id_user: req.user.id
+        id_user: req.id_user
       });
   
       const LicitacionInfo = await licitacion.save();
@@ -53,7 +54,7 @@ router.post("/", async (req, res) => {
       );
     }
   } catch (error) {
-    //console.log(error);
+    console.log(error);
     res.status(500).json({ error: "Error al crear la licitación" });
   }
 });
