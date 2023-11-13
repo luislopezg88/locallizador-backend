@@ -19,8 +19,8 @@ router.get("/", async (req, res) => {
 // Agregar ruta para consultar licitaciones
 router.get("/:id_user", async (req, res) => {
   try {
-    //const id_user = req.params.id_user.split('=')[1];
-    const id_user = "654fcf8ba7c46a184b05a90e";
+    const id_user = req.params.id_user.split('=')[1];
+    //const id_user = "654fcf8ba7c46a184b05a90e";
     const empresa = await Empresa.findOne({ id_user });
 
     if (!empresa) {
