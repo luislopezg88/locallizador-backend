@@ -27,10 +27,10 @@ router.get("/:id_user", async (req, res) => {
       return res.status(404).json({ error: "Empresa no encontrada" });
     }
 
-    const { _id, instrumento, finalidad } = empresa;
-    console.log("id: " + _id, "instrumento: " + instrumento, "finalidad: " + finalidad);
+    const { _id, finalidad, instrumento, administracion, organo } = empresa;
+    //console.log("id: " + _id, "instrumento: " + instrumento, "finalidad: " + finalidad);
 
-    const apiResults = await conectarAPI(instrumento, finalidad);
+    const apiResults = await conectarAPI(finalidad, instrumento, administracion, organo);
 
     if (Array.isArray(apiResults) && apiResults.length > 0) {
       const nuevasLicitaciones = new EmpresasLicitaciones({ id_empresa: _id, licitaciones: apiResults });
@@ -46,8 +46,8 @@ router.get("/:id_user", async (req, res) => {
 });
 
 // Función para conectar a la API y obtener resultados
-async function conectarAPI(instrumento, finalidad, titulo) {
-  const apiUrl = "https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria?finalidad=" + finalidad + "&fecha-desde=01/11/2023";
+async function conectarAPI(finalidad, instrumento, administracion, organo) {
+  const apiUrl = "https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria?finalidad=" + finalidad + "&instrumento=" + instrumento + "&administracion=" + administracion + "&organo=" + organo;
   
   try {
     const response = await axios.get(apiUrl);
