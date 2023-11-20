@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 
   try {
     const empresa = new Empresa();
-    const empresaExists = await empresa.empresaExists(req.body.titulo);
+    const empresaExists = await empresa.empresaExists(req.body.nombre);
 
     if (empresaExists) {
       return res.status(409).json(

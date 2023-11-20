@@ -17,8 +17,8 @@ const EmpresaSchema = new Mongoose.Schema({
   }
 });
 
-EmpresaSchema.methods.empresaExists = async function (titulo) {
-  const result = await Mongoose.model("Empresas").find({ titulo: titulo });
+EmpresaSchema.methods.empresaExists = async function (nombre) {
+  const result = await Mongoose.model("Empresas").find({ nombre: nombre });
   return result.length > 0;
 };
 

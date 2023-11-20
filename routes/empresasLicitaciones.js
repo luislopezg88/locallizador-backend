@@ -19,17 +19,14 @@ router.get("/", async (req, res) => {
 // Agregar ruta para consultar licitaciones
 router.get("/:id_user", async (req, res) => {
   try {
-    const id_user = req.params.id_user.split('=')[1];
-    //const id_user = "654fcf8ba7c46a184b05a90e";
+    const id_user = req.params.id_user;
     const empresa = await Empresa.findOne({ id_user });
 
     if (!empresa) {
       return res.status(404).json({ error: "Empresa no encontrada" });
     }
-
     const { _id, finalidad, instrumento, administracion, organo } = empresa;
-    //console.log("id: " + _id, "instrumento: " + instrumento, "finalidad: " + finalidad);
-
+  
     const apiResults = await conectarAPI(finalidad, instrumento, administracion, organo);
 
     if (Array.isArray(apiResults) && apiResults.length > 0) {
