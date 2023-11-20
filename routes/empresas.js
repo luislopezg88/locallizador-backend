@@ -42,10 +42,12 @@ router.post("/", async (req, res) => {
         id_user: req.body.id_user,
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
-        finalidad: req.body.finalidad,
         tipo: req.body.tipo,
         empleados: req.body.empleados,
+        finalidad: req.body.finalidad,
         instrumento: req.body.instrumento,
+        administracion: req.body.administracion,
+        organo: req.body.organo,
         tags: req.body.tags
       });
   
@@ -85,11 +87,11 @@ router.get("/:id", async function (req, res) {
 
 router.post("/save/:id", async function (req, res, next) {
   const id = req.params.id;
-  const { nombre, descripcion, finalidad, tipo, empleados, instrumento, tags } = req.body;
+  const { nombre, descripcion, tipo, empleados, finalidad, instrumento, administracion, organo, tags } = req.body;
   try {
     const empresa = await Empresa.findOne({ _id: id })
     if (!empresa) {
-      const nuevaEmpresa = new Empresa({ nombre, descripcion, finalidad, tipo, empleados, instrumento, tags, user });
+      const nuevaEmpresa = new Empresa({ nombre, descripcion, tipo, empleados, finalidad, instrumento, administracion, organo, tags, user });
       await nuevaEmpresa.save();
       res.json(
         jsonResponse(200, {
@@ -99,10 +101,12 @@ router.post("/save/:id", async function (req, res, next) {
     } else {
       empresa.nombre = nombre;
       empresa.descripcion = descripcion;
-      empresa.finalidad = finalidad;
       empresa.tipo = tipo;
       empresa.empleados = empleados;
+      empresa.finalidad = finalidad;
       empresa.instrumento = instrumento;
+      empresa.administracion = administracion;
+      empresa.organo = organo;
       empresa.tags = tags;
       await empresa.save();
       res.json(
