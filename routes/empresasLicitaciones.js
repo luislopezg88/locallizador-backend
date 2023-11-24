@@ -21,6 +21,7 @@ router.get("/:id_user", async (req, res) => {
   try {
     const id_user = req.params.id_user;
     const empresa = await Empresa.findOne({ id_user });
+    console.log('emoresa', empresa)
 
     if (!empresa) {
       return res.status(404).json({ error: "Empresa no encontrada" });
@@ -28,6 +29,7 @@ router.get("/:id_user", async (req, res) => {
     const { _id, finalidad, instrumento, administracion, organo } = empresa;
   
     const apiResults = await conectarAPI(finalidad, instrumento, administracion, organo);
+    console.log('apiResults', apiResults)
 
     if (Array.isArray(apiResults) && apiResults.length > 0) {
       const nuevasLicitaciones = new EmpresasLicitaciones({ id_empresa: _id, licitaciones: apiResults });
@@ -37,19 +39,22 @@ router.get("/:id_user", async (req, res) => {
       return res.json({ success: false, resultados: apiResults });
     }
   } catch (error) {
-    console.error(error);
+    console.error('error en el endpoint', error);
     return res.status(500).json({ error: "Error al consultar licitaciones" });
   }
 });
 
 // Función para conectar a la API y obtener resultados
-async function conectarAPI(finalidad, instrumento, administracion, organo) {
-  const apiUrl = "https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria?finalidad=" + finalidad + "&instrumento=" + instrumento + "&administracion=" + administracion + "&organo=" + organo;
-  
+const conectarAPI = async (finalidad, instrumento, administracion, organo) => {
+  const apiUrl = `https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria?organo=${organo}&finalidad=${finalidad}&instrumento=${instrumento}`;
+  console.log('apiUrl', apiUrl)
   try {
     const response = await axios.get(apiUrl);
     const { data } = response;
-
+    console.log('data', data)
+    for (const property in data[0].convocatorias) {
+      console.log(`${property}: ${object[property]}`);
+    }
     if (Array.isArray(data) && data.length > 0) {
       const primerElemento = data[0];
 
@@ -58,20 +63,25 @@ async function conectarAPI(finalidad, instrumento, administracion, organo) {
           id,
           ...convocatoria,
         }));
-
+        console.log('convocatoriasArray', convocatoriasArray)
         return convocatoriasArray;
       } else {
+        
         console.error('La propiedad convocatorias no existe en el primer elemento del array.');
+        return 'La propiedad convocatorias no existe en el primer elemento del array'
       }
     } else {
       console.error('La propiedad data no es un array o no contiene elementos.');
+      return 'La propiedad data no es un array o no contiene elementos'
     }
   } catch (error) {
+    console.log('error al conectar el api externa', error.response)
     if (error.response && error.response.status === 404) {
       console.error('No se encontraron convocatorias para los parámetros proporcionados.');
       return 'No se encontraron convocatorias para los parámetros proporcionados.';
     } else {
       console.error("Error al conectar a la API:", error.message);
+      return 'Error al conectar a la API';
     }
     throw error;
   }
