@@ -21,7 +21,7 @@ router.get("/:id_user", async (req, res) => {
   try {
     const id_user = req.params.id_user;
     const empresa = await Empresa.findOne({ id_user });
-    console.log('emoresa', empresa)
+    console.log('empresa', empresa)
 
     if (!empresa) {
       return res.status(404).json({ error: "Empresa no encontrada" });
@@ -46,7 +46,7 @@ router.get("/:id_user", async (req, res) => {
 
 // Función para conectar a la API y obtener resultados
 const conectarAPI = async (finalidad, instrumento, administracion, organo) => {
-  const apiUrl = `https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria`;
+  let apiUrl = `https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria`;
 
   if (organo !== '') {
     apiUrl = apiUrl + `?organo=${organo}`;
@@ -66,8 +66,8 @@ const conectarAPI = async (finalidad, instrumento, administracion, organo) => {
     const { data } = response;
     console.log('data', data)
     for (const property in data[0].convocatorias) {
-      console.log(`${property}: ${object[property]}`);
-    }
+      console.log(`${property}: ${data[0].convocatorias[property]}`);
+    }    
     if (Array.isArray(data) && data.length > 0) {
       const primerElemento = data[0];
 
