@@ -46,8 +46,21 @@ router.get("/:id_user", async (req, res) => {
 
 // Función para conectar a la API y obtener resultados
 const conectarAPI = async (finalidad, instrumento, administracion, organo) => {
-  const apiUrl = `https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria?organo=${organo}&finalidad=${finalidad}&instrumento=${instrumento}`;
-  console.log('apiUrl', apiUrl)
+  const apiUrl = `https://www.infosubvenciones.es/bdnstrans/GE/es/api/v2.1/listadoconvocatoria`;
+
+  if (organo !== '') {
+    apiUrl = apiUrl + `?organo=${organo}`;
+  }
+
+  if (finalidad !== '') {
+    apiUrl = apiUrl + (apiUrl.includes('?') ? `&finalidad=${finalidad}` : `?finalidad=${finalidad}`);
+  }
+
+  if (instrumento !== '') {
+    apiUrl = apiUrl + (apiUrl.includes('?') || apiUrl.includes('&') ? `&instrumento=${instrumento}` : `?instrumento=${instrumento}`);
+  }
+
+  console.log('apiUrl', apiUrl);
   try {
     const response = await axios.get(apiUrl);
     const { data } = response;
